@@ -188,7 +188,6 @@ replace fin17f_r = 0 if missing(fin17f)
 generate byte fin21_r = fin21
 replace fin21_r = 0 if inlist(fin21, ., 2)
 
-
 * ---------------------------------------------------------------------------
 * 4. Binary variables where structural missing means Yes
 * ---------------------------------------------------------------------------
