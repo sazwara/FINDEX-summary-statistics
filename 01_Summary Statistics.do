@@ -1361,3 +1361,5 @@ export excel using ///
     sheet("Category Statistics", replace) firstrow(varlabels)
 
 restore
+
+save "$project/output/1_summary_statistics_output.dta", replace
