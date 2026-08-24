@@ -90,7 +90,7 @@ local all_locals ///
 * Weighted pairwise Pearson correlations
 * ---------------------------------------------------------------------------
 
-pwcorr `indicators' [aw=wgt], obs
+qui pwcorr `all_locals' [aw=wgt], obs
 
 * Store the coefficient matrix for later Excel export
 matrix indicator_correlations = r(C)
@@ -114,22 +114,26 @@ putexcel A4 = matrix(indicator_correlations), names
 * 		  5 -> Richest
 * ---------------------------------------------------------------------------
 
-*Income
+* Generate income vars
 
-label define incquintiles ///
-	1 "Lowest 20%" ///
-	2 "Lowest 40%" ///
-	3 "40-60%" ///
-	4 "Top 40%" ///
-	5 "Top 20%" ///
-	
-label values inc_q incquintiles 
+tab inc_q, gen(income_q)
 
-pwcorr `all_locals' inc_q [aw=wgt], obs
+qui pwcorr `all_locals' income_q* [aw=wgt], obs
 
-* Store the coefficient matrix for later Excel export
+* Store the coefficient matrix 
 matrix indicatorxincome = r(C)
-matrix list indicatorxincome
+
+local number_indicators : word count `all_locals'
+local first_income = `number_indicators' + 1
+local last_income  = `number_indicators' + 5
+
+matrix C_income = ///
+    indicatorxincome[1..`number_indicators', `first_income'..`last_income']
+
+matrix colnames C_income = ///
+    "Lowest 20%" "Lowest 40%" "40%-60%" "Top 40%" "Top 20%"
+
+matrix list C_income
 
 putexcel set ///
     "`workbook'", ///
@@ -139,7 +143,7 @@ putexcel A1 = "Table 3"
 
 putexcel A2 = "Weighted Pearson correlations of financial well-being indicators and income quintiles"
 
-putexcel A4 = matrix(indicatorxincome), names
+putexcel A4 = matrix(C_income), names
 
 *---
 * Done
