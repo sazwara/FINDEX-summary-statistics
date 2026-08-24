@@ -263,7 +263,7 @@ matrix list means_disaggregated
 * ---------------------------------------------------------------------------
 	
 putexcel set "`workbook'", ///
-    sheet("Disaggregrated Mean") replace
+    sheet("Disaggregrated Mean") modify
 	
 putexcel A1 = "Table 4"
 

@@ -98,7 +98,7 @@ matrix list indicator_correlations
 
 putexcel set ///
     "`workbook'", ///
-    sheet("Indicator Correlations") replace
+    sheet("Indicator Correlations") modify
 	
 putexcel A1 = "Table 2"
 
@@ -133,7 +133,7 @@ matrix list indicatorxincome
 
 putexcel set ///
     "`workbook'", ///
-    sheet("Indicator x Income", replace) replace
+    sheet("Indicator x Income") modify
 	
 putexcel A1 = "Table 3"
 
