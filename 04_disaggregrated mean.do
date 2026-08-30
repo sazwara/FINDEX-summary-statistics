@@ -65,6 +65,11 @@ label define incquintiles ///
 	
 label values inc_q incquintiles 
 
+*Income quintile respondents
+count if !missing(inc_q)
+tab inc_q
+tab inc_q [aw=wgt]
+
 *Urban/rural
 gen rural_bin = urbanicity
 replace rural_bin=0 if urbanicity==2
@@ -143,118 +148,156 @@ local all_locals ///
 * Female
 estpost tabstat `all_locals' [aw=wgt] ///
     if female_bin == 1, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix female_stats = (e(count)', e(mean)')
+matrix female_stats = (e(count)', e(mean)', e(sd)')
 
 * Male
 estpost tabstat `all_locals' [aw=wgt] ///
     if female_bin == 0, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix male_stats = (e(count)', e(mean)')
+matrix male_stats = (e(count)', e(mean)', e(sd)')
 
 
 * Income: lowest 20%
 estpost tabstat `all_locals' [aw=wgt] ///
     if inc_q == 1, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix income1_stats = (e(count)', e(mean)')
+matrix income1_stats = (e(count)', e(mean)', e(sd)')
 
 * Income: 20-40%
 estpost tabstat `all_locals' [aw=wgt] ///
     if inc_q == 2, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix income2_stats = (e(count)', e(mean)')
+matrix income2_stats = (e(count)', e(mean)', e(sd)')
 
 * Income: 40-60%
 estpost tabstat `all_locals' [aw=wgt] ///
     if inc_q == 3, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix income3_stats = (e(count)', e(mean)')
+matrix income3_stats = (e(count)', e(mean)', e(sd)')
 
 * Income: 60-80%
 estpost tabstat `all_locals' [aw=wgt] ///
     if inc_q == 4, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix income4_stats = (e(count)', e(mean)')
+matrix income4_stats = (e(count)', e(mean)', e(sd)')
 
 * Income: highest 20%
 estpost tabstat `all_locals' [aw=wgt] ///
     if inc_q == 5, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix income5_stats = (e(count)', e(mean)')
+matrix income5_stats = (e(count)', e(mean)', e(sd)')
 
 
 * Age 15-24
 estpost tabstat `all_locals' [aw=wgt] ///
     if agequartiles == 1, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix age1_stats = (e(count)', e(mean)')
+matrix age1_stats = (e(count)', e(mean)', e(sd)')
 
 * Age 25-34
 estpost tabstat `all_locals' [aw=wgt] ///
     if agequartiles == 2, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix age2_stats = (e(count)', e(mean)')
+matrix age2_stats = (e(count)', e(mean)', e(sd)')
 
 * Age 35-44
 estpost tabstat `all_locals' [aw=wgt] ///
     if agequartiles == 3, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix age3_stats = (e(count)', e(mean)')
+matrix age3_stats = (e(count)', e(mean)', e(sd)')
 
 * Age 45-88
 estpost tabstat `all_locals' [aw=wgt] ///
     if agequartiles == 4, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix age4_stats = (e(count)', e(mean)')
+matrix age4_stats = (e(count)', e(mean)', e(sd)')
 
 
 * Rural
 estpost tabstat `all_locals' [aw=wgt] ///
     if rural_bin == 1, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix rural_stats = (e(count)', e(mean)')
+matrix rural_stats = (e(count)', e(mean)', e(sd)')
 
 * Urban
 estpost tabstat `all_locals' [aw=wgt] ///
     if rural_bin == 0, ///
-    statistics(count mean) columns(statistics)
+    statistics(count mean sd) columns(statistics)
 
-matrix urban_stats = (e(count)', e(mean)')
+matrix urban_stats = (e(count)', e(mean)', e(sd)')
+
+
+* Female vs. Male and Rural vs. Urban t-tests
+svyset [pweight=wgt]
+
+local number_variables : word count `all_locals'
+
+matrix female_male_tests = J(`number_variables', 3, .)
+matrix rural_urban_tests = J(`number_variables', 3, .)
+
+local row = 1
+
+foreach variable of local all_locals {
+
+	quietly svy: regress `variable' i.female_bin
+	quietly lincom 1.female_bin
+
+	matrix female_male_tests[`row', 1] = r(estimate)
+	matrix female_male_tests[`row', 2] = r(estimate) / r(se)
+	matrix female_male_tests[`row', 3] = r(p)
+
+	quietly svy: regress `variable' i.rural_bin
+	quietly lincom 1.rural_bin
+
+	matrix rural_urban_tests[`row', 1] = r(estimate)
+	matrix rural_urban_tests[`row', 2] = r(estimate) / r(se)
+	matrix rural_urban_tests[`row', 3] = r(p)
+
+	local row = `row' + 1
+}
+
+matrix colnames female_male_tests = ///
+	FemaleMale_Difference FemaleMale_t FemaleMale_p
+
+matrix colnames rural_urban_tests = ///
+	RuralUrban_Difference RuralUrban_t RuralUrban_p
 
 matrix means_disaggregated = ///
-    female_stats, male_stats, ///
-    income1_stats, income2_stats, income3_stats, ///
-    income4_stats, income5_stats, ///
-    age1_stats, age2_stats, age3_stats, age4_stats, ///
-    rural_stats, urban_stats
+	female_stats, male_stats, female_male_tests, ///
+	income1_stats, income2_stats, income3_stats, ///
+	income4_stats, income5_stats, ///
+	age1_stats, age2_stats, age3_stats, age4_stats, ///
+	rural_stats, urban_stats, rural_urban_tests
 
 matrix colnames means_disaggregated = ///
-    Female_N Female_Mean ///
-    Male_N Male_Mean ///
-    IncomeLowest20_N IncomeLowest20_Mean ///
-    Income20_40_N Income20_40_Mean ///
-    Income40_60_N Income40_60_Mean ///
-    Income60_80_N Income60_80_Mean ///
-    IncomeHighest20_N IncomeHighest20_Mean ///
-    Age15_24_N Age15_24_Mean ///
-    Age25_34_N Age25_34_Mean ///
-    Age35_44_N Age35_44_Mean ///
-    Age45_88_N Age45_88_Mean ///
-    Rural_N Rural_Mean ///
-    Urban_N Urban_Mean
+	Female_N Female_Mean Female_SD ///
+	Male_N Male_Mean Male_SD ///
+	FemaleMale_Difference FemaleMale_t FemaleMale_p ///
+	IncomeLowest20_N IncomeLowest20_Mean IncomeLowest20_SD ///
+    Income20_40_N Income20_40_Mean Income20_40_SD ///
+    Income40_60_N Income40_60_Mean Income40_60_SD ///
+    Income60_80_N Income60_80_Mean Income60_80_SD ///
+    IncomeHighest20_N IncomeHighest20_Mean IncomeHighest20_SD ///
+    Age15_24_N Age15_24_Mean Age15_24_SD ///
+    Age25_34_N Age25_34_Mean Age25_34_SD ///
+    Age35_44_N Age35_44_Mean Age35_44_SD ///
+	Age45_88_N Age45_88_Mean Age45_88_SD ///
+	Rural_N Rural_Mean Rural_SD ///
+	Urban_N Urban_Mean Urban_SD ///
+	RuralUrban_Difference RuralUrban_t RuralUrban_p
 
 matrix list means_disaggregated
 

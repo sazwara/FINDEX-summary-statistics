@@ -90,7 +90,7 @@ local all_locals ///
 * Weighted pairwise Pearson correlations
 * ---------------------------------------------------------------------------
 
-qui pwcorr `all_locals' [aw=wgt], obs
+pwcorr `all_locals' inc_q [aw=wgt], obs
 
 * Store the coefficient matrix for later Excel export
 matrix indicator_correlations = r(C)

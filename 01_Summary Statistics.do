@@ -839,13 +839,13 @@ estpost tabstat ///
     fh1_r fin28_r fh2_r fin29_r fh2a_r ///
     fin17f_r fin22e_r fin38_r fin44_r ///
     [aw=wgt], ///
-    statistics(count min max mean p50) ///
+    statistics(count min max mean sd p50) ///
     columns(statistics)
 
 * Exporting estpost to Excel
 
-matrix numerical_stats = (e(count)' , e(min)' , e(max)' , e(mean)' , e(p50)')
-matrix colnames numerical_stats = N Minimum Maximum Mean Median
+matrix numerical_stats = (e(count)' , e(min)' , e(max)' , e(mean)' , e(sd)' , e(p50)')
+matrix colnames numerical_stats = N Minimum Maximum Mean SD Median
 matrix list numerical_stats
 
 putexcel set  "`workbook'", ///
@@ -886,7 +886,7 @@ postfile `category_post' ///
     str12 code ///
     str80 category ///
     str32 dummy_variable ///
-    double N minimum maximum mean median ///
+    double N minimum maximum mean sd median ///
     using "`category_statistics'", replace
 
 
@@ -895,26 +895,26 @@ quietly count if fin5_weekly == 1
 local category_N = r(N)
 quietly summarize fin5_weekly [aw=wgt], detail
 post `category_post' (1) ("fin5") ("Weekly") ("fin5_weekly") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin5_monthly == 1
 local category_N = r(N)
 quietly summarize fin5_monthly [aw=wgt], detail
 post `category_post' (2) ("fin5") ("Monthly") ("fin5_monthly") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin5_less_month == 1
 local category_N = r(N)
 quietly summarize fin5_less_month [aw=wgt], detail
 post `category_post' (3) ("fin5") ("Less than once a month") ///
     ("fin5_less_month") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin5_never == 1
 local category_N = r(N)
 quietly summarize fin5_never [aw=wgt], detail
 post `category_post' (4) ("fin5") ("Never") ("fin5_never") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN6
@@ -922,26 +922,26 @@ quietly count if fin6_weekly == 1
 local category_N = r(N)
 quietly summarize fin6_weekly [aw=wgt], detail
 post `category_post' (5) ("fin6") ("Weekly") ("fin6_weekly") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin6_monthly == 1
 local category_N = r(N)
 quietly summarize fin6_monthly [aw=wgt], detail
 post `category_post' (6) ("fin6") ("Monthly") ("fin6_monthly") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin6_less_month == 1
 local category_N = r(N)
 quietly summarize fin6_less_month [aw=wgt], detail
 post `category_post' (7) ("fin6") ("Less than once a month") ///
     ("fin6_less_month") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin6_never == 1
 local category_N = r(N)
 quietly summarize fin6_never [aw=wgt], detail
 post `category_post' (8) ("fin6") ("Never") ("fin6_never") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN25E3
@@ -949,21 +949,21 @@ quietly count if fin25e3_weekly == 1
 local category_N = r(N)
 quietly summarize fin25e3_weekly [aw=wgt], detail
 post `category_post' (9) ("fin25e3") ("Weekly") ("fin25e3_weekly") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin25e3_monthly == 1
 local category_N = r(N)
 quietly summarize fin25e3_monthly [aw=wgt], detail
 post `category_post' (10) ("fin25e3") ("Monthly") ///
     ("fin25e3_monthly") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin25e3_less_month == 1
 local category_N = r(N)
 quietly summarize fin25e3_less_month [aw=wgt], detail
 post `category_post' (11) ("fin25e3") ("Less than once a month") ///
     ("fin25e3_less_month") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN25E4
@@ -972,7 +972,7 @@ local category_N = r(N)
 quietly summarize fin25e4_merchant_cash [aw=wgt], detail
 post `category_post' (12) ("fin25e4") ///
     ("Because the merchant only accepts cash") ("fin25e4_merchant_cash") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin25e4_more_expensive == 1
 local category_N = r(N)
@@ -980,27 +980,27 @@ quietly summarize fin25e4_more_expensive [aw=wgt], detail
 post `category_post' (13) ("fin25e4") ///
     ("More expensive to pay using a card or phone") ///
     ("fin25e4_more_expensive") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin25e4_used_cash == 1
 local category_N = r(N)
 quietly summarize fin25e4_used_cash [aw=wgt], detail
 post `category_post' (14) ("fin25e4") ("Used to paying by cash") ///
     ("fin25e4_used_cash") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin25e4_other == 1
 local category_N = r(N)
 quietly summarize fin25e4_other [aw=wgt], detail
 post `category_post' (15) ("fin25e4") ("Some other reason") ///
     ("fin25e4_other") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin25e4_dk == 1
 local category_N = r(N)
 quietly summarize fin25e4_dk [aw=wgt], detail
 post `category_post' (16) ("fin25e4") ("Don't know") ("fin25e4_dk") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin25e4_phone_used == 1
 local category_N = r(N)
@@ -1008,7 +1008,7 @@ quietly summarize fin25e4_phone_used [aw=wgt], detail
 post `category_post' (17) ("fin25e4") ///
     ("Not applicable / has used mobile phone payment") ///
     ("fin25e4_phone_used") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN27
@@ -1016,64 +1016,64 @@ quietly count if fin27_online == 1
 local category_N = r(N)
 quietly summarize fin27_online [aw=wgt], detail
 post `category_post' (18) ("fin27") ("Pay online") ("fin27_online") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin27_cash == 1
 local category_N = r(N)
 quietly summarize fin27_cash [aw=wgt], detail
 post `category_post' (19) ("fin27") ("In cash") ("fin27_cash") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin27_both == 1
 local category_N = r(N)
 quietly summarize fin27_both [aw=wgt], detail
 post `category_post' (20) ("fin27") ("Both") ("fin27_both") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin27_no_online_purchase == 1
 local category_N = r(N)
 quietly summarize fin27_no_online_purchase [aw=wgt], detail
 post `category_post' (21) ("fin27") ("Does not buy online") ///
     ("fin27_no_online_purchase") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN34D
 quietly summarize fin34d_yes [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (22) ("fin34d") ("Yes") ("fin34d_yes") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly summarize fin34d_no [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (23) ("fin34d") ("No") ("fin34d_no") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly summarize fin34d_other_payment [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (24) ("fin34d") ///
     ("Not applicable / other forms of salary payment") ///
     ("fin34d_other_payment") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN35
 quietly summarize fin35_yes [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (25) ("fin35") ("Yes") ("fin35_yes") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly summarize fin35_no [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (26) ("fin35") ("No") ("fin35_no") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly summarize fin35_not_applicable [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (27) ("fin35") ///
     ("Not applicable / receives money in cash") ///
     ("fin35_not_applicable") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN36
@@ -1082,54 +1082,54 @@ local category_N = r(N)
 quietly summarize fin36_all_cash [aw=wgt], detail
 post `category_post' (28) ("fin36") ("Take out all as cash at one time") ///
     ("fin36_all_cash") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin36_leave_money == 1
 local category_N = r(N)
 quietly summarize fin36_leave_money [aw=wgt], detail
 post `category_post' (29) ("fin36") ("Leave some money in the account") ///
     ("fin36_leave_money") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin36_transfer == 1
 local category_N = r(N)
 quietly summarize fin36_transfer [aw=wgt], detail
 post `category_post' (30) ("fin36") ///
     ("Transfer money to another personal account") ("fin36_transfer") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin36_not_applicable == 1
 local category_N = r(N)
 quietly summarize fin36_not_applicable [aw=wgt], detail
 post `category_post' (31) ("fin36") ///
     ("Not employed / received money in cash") ("fin36_not_applicable") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 * FIN17D
 quietly count if fin17d_weekly == 1
 local category_N = r(N)
 quietly summarize fin17d_weekly [aw=wgt], detail
 post `category_post' (32) ("fin17d") ("Weekly") ("fin17d_weekly") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin17d_monthly == 1
 local category_N = r(N)
 quietly summarize fin17d_monthly [aw=wgt], detail
 post `category_post' (33) ("fin17d") ("Monthly") ("fin17d_monthly") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin17d_less_month == 1
 local category_N = r(N)
 quietly summarize fin17d_less_month [aw=wgt], detail
 post `category_post' (34) ("fin17d") ("Less than once a month") ///
     ("fin17d_less_month") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin17d_dk == 1
 local category_N = r(N)
 quietly summarize fin17d_dk [aw=wgt], detail
 post `category_post' (35) ("fin17d") ("Don't know") ("fin17d_dk") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN24
@@ -1137,21 +1137,21 @@ quietly count if fin24_savings == 1
 local category_N = r(N)
 quietly summarize fin24_savings [aw=wgt], detail
 post `category_post' (36) ("fin24") ("Savings") ("fin24_savings") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24_family == 1
 local category_N = r(N)
 quietly summarize fin24_family [aw=wgt], detail
 post `category_post' (37) ("fin24") ///
     ("Family, relatives, or friends") ("fin24_family") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24_work == 1
 local category_N = r(N)
 quietly summarize fin24_work [aw=wgt], detail
 post `category_post' (38) ("fin24") ("Money from working") ///
     ("fin24_work") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24_loan == 1
 local category_N = r(N)
@@ -1159,33 +1159,33 @@ quietly summarize fin24_loan [aw=wgt], detail
 post `category_post' (39) ("fin24") ///
     ("Loan from financial institution, employer, or private lender") ///
     ("fin24_loan") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24_sell_asset == 1
 local category_N = r(N)
 quietly summarize fin24_sell_asset [aw=wgt], detail
 post `category_post' (40) ("fin24") ///
     ("Selling something you own") ("fin24_sell_asset") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24_other == 1
 local category_N = r(N)
 quietly summarize fin24_other [aw=wgt], detail
 post `category_post' (41) ("fin24") ("Other") ("fin24_other") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24_cannot_raise == 1
 local category_N = r(N)
 quietly summarize fin24_cannot_raise [aw=wgt], detail
 post `category_post' (42) ("fin24") ("Cannot come up with the money") ///
     ("fin24_cannot_raise") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24_dk == 1
 local category_N = r(N)
 quietly summarize fin24_dk [aw=wgt], detail
 post `category_post' (43) ("fin24") ("Don't know") ("fin24_dk") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 * FIN24B
 quietly count if fin24b_less_2weeks == 1
@@ -1193,34 +1193,34 @@ local category_N = r(N)
 quietly summarize fin24b_less_2weeks [aw=wgt], detail
 post `category_post' (44) ("fin24b") ("Less than two weeks") ///
     ("fin24b_less_2weeks") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24b_one_month == 1
 local category_N = r(N)
 quietly summarize fin24b_one_month [aw=wgt], detail
 post `category_post' (45) ("fin24b") ("About one month") ///
     ("fin24b_one_month") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24b_two_months == 1
 local category_N = r(N)
 quietly summarize fin24b_two_months [aw=wgt], detail
 post `category_post' (46) ("fin24b") ("About two months") ///
     ("fin24b_two_months") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24b_more_2months == 1
 local category_N = r(N)
 quietly summarize fin24b_more_2months [aw=wgt], detail
 post `category_post' (47) ("fin24b") ("More than two months") ///
     ("fin24b_more_2months") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin24b_dk == 1
 local category_N = r(N)
 quietly summarize fin24b_dk [aw=wgt], detail
 post `category_post' (48) ("fin24b") ("Don't know") ("fin24b_dk") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN40
@@ -1229,14 +1229,14 @@ local category_N = r(N)
 quietly summarize fin40_all_cash [aw=wgt], detail
 post `category_post' (49) ("fin40") ("Take out all as cash at one time") ///
     ("fin40_all_cash") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin40_leave_money == 1
 local category_N = r(N)
 quietly summarize fin40_leave_money [aw=wgt], detail
 post `category_post' (50) ("fin40") ("Leave some money in the account") ///
     ("fin40_leave_money") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin40_not_applicable == 1
 local category_N = r(N)
@@ -1244,44 +1244,44 @@ quietly summarize fin40_not_applicable [aw=wgt], detail
 post `category_post' (51) ("fin40") ///
     ("Not applicable / does not receive money from government") ///
     ("fin40_not_applicable") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN41
 quietly summarize fin41_yes [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (52) ("fin41") ("Yes") ("fin41_yes") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly summarize fin41_no [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (53) ("fin41") ("No") ("fin41_no") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly summarize fin41_not_applicable [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (54) ("fin41") ///
     ("Not applicable / does not receive money from government") ///
     ("fin41_not_applicable") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN44
 quietly summarize fin44_yes [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (55) ("fin44") ("Yes") ("fin44_yes") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly summarize fin44_no [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (56) ("fin44") ("No") ("fin44_no") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly summarize fin44_not_applicable [aw=wgt], detail
 local category_N = r(N)
 post `category_post' (57) ("fin44") ("Not applicable") ///
     ("fin44_not_applicable") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 * FIN45
@@ -1289,14 +1289,14 @@ quietly count if fin45_old_age == 1
 local category_N = r(N)
 quietly summarize fin45_old_age [aw=wgt], detail
 post `category_post' (58) ("fin45") ("For old age") ("fin45_old_age") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin45_business == 1
 local category_N = r(N)
 quietly summarize fin45_business [aw=wgt], detail
 post `category_post' (59) ("fin45") ("For your business") ///
     ("fin45_business") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin45_medical == 1
 local category_N = r(N)
@@ -1304,7 +1304,7 @@ quietly summarize fin45_medical [aw=wgt], detail
 post `category_post' (60) ("fin45") ///
     ("For medical costs in case of serious illness or accident") ///
     ("fin45_medical") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin45_monthly_expenses == 1
 local category_N = r(N)
@@ -1312,26 +1312,26 @@ quietly summarize fin45_monthly_expenses [aw=wgt], detail
 post `category_post' (61) ("fin45") ///
     ("For monthly expenses, such as food, housing, or bills") ///
     ("fin45_monthly_expenses") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin45_education == 1
 local category_N = r(N)
 quietly summarize fin45_education [aw=wgt], detail
 post `category_post' (62) ("fin45") ("For school or education fees") ///
     ("fin45_education") (`category_N') ///
-    (r(min)) (r(max)) (r(mean)) (r(p50))
+    (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin45_other == 1
 local category_N = r(N)
 quietly summarize fin45_other [aw=wgt], detail
 post `category_post' (63) ("fin45") ("Others") ("fin45_other") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 quietly count if fin45_dk == 1
 local category_N = r(N)
 quietly summarize fin45_dk [aw=wgt], detail
 post `category_post' (64) ("fin45") ("Don't know") ("fin45_dk") ///
-    (`category_N') (r(min)) (r(max)) (r(mean)) (r(p50))
+    (`category_N') (r(min)) (r(max)) (r(mean)) (r(sd)) (r(p50))
 
 
 postclose `category_post'
@@ -1350,11 +1350,12 @@ label variable N              "Valid N"
 label variable minimum        "Minimum"
 label variable maximum        "Maximum"
 label variable mean           "Weighted share"
+label variable sd             "Weighted standard deviation"
 label variable median         "Weighted median"
 
 format N %9.0f
 format minimum maximum median %9.0f
-format mean %9.3f
+format mean sd %9.3f
 
 export excel using ///
     "`workbook'", ///
