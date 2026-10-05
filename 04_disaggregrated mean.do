@@ -58,9 +58,9 @@ tab agequartiles
 
 label define incquintiles ///
 	1 "Lowest 20%" ///
-	2 "Lowest 40%" ///
+	2 "20-40%" ///
 	3 "40-60%" ///
-	4 "Top 40%" ///
+	4 "60-80%" ///
 	5 "Top 20%" ///
 	
 label values inc_q incquintiles 
@@ -319,9 +319,3 @@ putexcel A4 = matrix(means_disaggregated), names
 *------
 	
 save "$project/output/4_means_disaggregrated", replace
-
-
-
-	
-	
-	

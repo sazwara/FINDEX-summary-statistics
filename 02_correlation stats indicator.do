@@ -131,7 +131,7 @@ matrix C_income = ///
     indicatorxincome[1..`number_indicators', `first_income'..`last_income']
 
 matrix colnames C_income = ///
-    "Lowest 20%" "Lowest 40%" "40%-60%" "Top 40%" "Top 20%"
+    "Lowest 20%" "20%-40%" "40%-60%" "60%-80%" "Top 20%"
 
 matrix list C_income
 
@@ -150,4 +150,3 @@ putexcel A4 = matrix(C_income), names
 *---
 
 save "$project/output/2_correlation_indicators", replace
-

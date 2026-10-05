@@ -8,7 +8,7 @@ set more off
 
 * User-specific project directory
 
-else if "`c(username)'" == "sazwara" {
+if "`c(username)'" == "sazwara" {
     global project ///
         "/Users/sazwara/Library/Mobile Documents/com~apple~CloudDocs/JPAL/FINDEX"
 }
@@ -19,7 +19,7 @@ else {
 
 * Shared directories
 global code   "/Users/sazwara/Library/Mobile Documents/com~apple~CloudDocs/JPAL/FINDEX/FINDEX summary statistics"
-global output "/Users/sazwara/Library/CloudStorage/GoogleDrive-tasazwara@gmail.com/My Drive/IFII Findex Financial well-being"
+global output "$project/output"
 
 
 capture mkdir "$output"
